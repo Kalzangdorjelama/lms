@@ -3,7 +3,7 @@ import mongoose, { Schema } from "mongoose";
 const userSchema = new Schema({
   username: String,
   email: String,
-  googleID: {
+  googleId: {
     type: String,
   },
   profileImage: {

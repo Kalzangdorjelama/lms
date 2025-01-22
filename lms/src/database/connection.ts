@@ -9,9 +9,9 @@ if (!MONGODB_URL) {
 const dbConnect = async () => {
   try {
     await mongoose.connect(MONGODB_URL);
-    console.log("DATABASE CONNECT SUCCESSFULLY");
+    console.log("DATABASE CONNECT SUCCESSFULLY😊");
   } catch (error) {
-    console.log("CONNECTION FAILED!!! :", error);
+    console.log("DATABASE CONNECTION FAILED!!!🥺 :", error);
   }
 };
 
