@@ -7,6 +7,10 @@ if (!MONGODB_URL) {
 }
 
 const dbConnect = async () => {
+  if (mongoose.connection.readyState === 1) {
+    console.log("DATABASE ALREADY CONNECTED🚀");
+    return;
+  }
   try {
     await mongoose.connect(MONGODB_URL);
     console.log("DATABASE CONNECT SUCCESSFULLY😊");
