@@ -14,7 +14,7 @@ function home() {
         />
         <h1>Welcome, {session.user?.name}</h1>
         <h3>{session.user?.email}</h3>
-        <button onClick={() => signOut}>sign Out</button>
+        <button onClick={() => signOut()}>sign Out</button>
       </>
     );
   }

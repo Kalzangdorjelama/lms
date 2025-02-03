@@ -1,15 +1,38 @@
 import mongoose, { Schema } from "mongoose";
 
-const userSchema = new Schema({
-  username: String,
-  email: String,
-  googleId: {
+// fixed hunxa role ma value student or admin
+enum Role {
+  Student = "student",
+  Admin = "admin",
+}
+
+interface IUser extends Document {
+  username: string;
+  profileImage: string;
+  email: string;
+  role: Role;
+  // role: "student" | "admin" --> not a reuseable code so we use enum to get value
+}
+
+const userSchema = new Schema<IUser>({
+  username: {
     type: String,
+    required: true,
+  },
+  email: {
+    type: String,
+    required: true,
+  },
+  role: {
+    type: String,
+    enum: [Role.Student],
+    // enum: ["student"] --> can be done like this but not a good practice
+    default: Role.Student,
   },
   profileImage: {
     type: String,
   },
 });
 
- export const User = mongoose.model("User", userSchema);
- 
+const User = mongoose.models.User || mongoose.model("User", userSchema);
+export default User;
