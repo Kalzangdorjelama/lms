@@ -1,12 +1,12 @@
 import mongoose, { Schema } from "mongoose";
 
 // fixed hunxa role ma value student or admin
-enum Role {
+export enum Role {
   Student = "student",
   Admin = "admin",
 }
 
-interface IUser extends Document {
+export interface IUser extends Document {
   username: string;
   profileImage: string;
   email: string;

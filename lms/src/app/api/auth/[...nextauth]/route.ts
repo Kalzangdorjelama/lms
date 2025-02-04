@@ -1,24 +1,26 @@
-import NextAuth from "next-auth";
-import Googleprovider from "next-auth/providers/google";
 import dbConnect from "@/database/connection";
 import User from "@/database/models/user.schema";
-import { profile } from "console";
+import NextAuth, { Session } from "next-auth";
+import { AuthOptions } from "next-auth";
+import GoogleProvider from "next-auth/providers/google";
 
-const handler = NextAuth({
+export const authOptions: AuthOptions = {
   providers: [
-    Googleprovider({
+    GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
     }),
   ],
-  secret: process.env.NEXTAUTH_SECRET, // browser ko session lai lock gare ko hai simple to remember
-
-  // An external database is a database that is not part of an organization's main system. It is typically hosted and maintained by a third party on off-site servers, and is accessible over the internet. 
+  secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
-    async signIn({ user }): Promise<boolean> {
+    async signIn({
+      user,
+    }: {
+      user: { name: string; email: string; image: string };
+    }): Promise<boolean> {
       try {
         await dbConnect();
-        const existingUser = await User.findOne({ email: user.email });
+        const existingUser = await User.findOne({ email: user.email }); // return object {username : "sdfdf",email:"sdf"} , {}
         if (!existingUser) {
           await User.create({
             username: user.name,
@@ -32,7 +34,13 @@ const handler = NextAuth({
         return false;
       }
     },
-  },
-});
 
+    async session({ session, user }: { session: Session; user: any }) {
+      const data = await User.findById(user.id); // select * from users where id = "1hgjhgu686ytyt" return object
+      session.user.role = data?.role || "student";
+      return session;
+    },
+  },
+};
+const handler = NextAuth(authOptions);
 export { handler as GET, handler as POST };
