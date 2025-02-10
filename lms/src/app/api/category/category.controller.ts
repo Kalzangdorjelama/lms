@@ -5,7 +5,7 @@ import authMiddleware from "../../../../middleware/auth.middleware";
 
 export async function createCategory(req: Request) {
   try {
-    authMiddleware(req as NextRequest)
+    authMiddleware(req as NextRequest);
     await dbConnect();
     const { name, description } = await req.json(); // req.body
     const existingCategory = await Category.findOne({
@@ -31,7 +31,7 @@ export async function createCategory(req: Request) {
     return Response.json(
       {
         message: "Category is succesfully created",
-        data: createCategory
+        data: createCategory,
       },
       {
         status: 201,
@@ -75,7 +75,7 @@ export async function getCategories() {
     console.log(error);
     return Response.json(
       {
-        message: "something went wrong"
+        message: "something went wrong",
       },
       { status: 500 }
     );
