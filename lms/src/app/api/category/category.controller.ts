@@ -5,7 +5,7 @@ import authMiddleware from "../../../../middleware/auth.middleware";
 
 export async function createCategory(req: Request) {
   try {
-    authMiddleware(req as NextRequest);
+    // authMiddleware(req as NextRequest);
     await dbConnect();
     const { name, description } = await req.json(); // req.body
     const existingCategory = await Category.findOne({
