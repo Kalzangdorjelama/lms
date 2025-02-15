@@ -67,7 +67,7 @@ export async function getCategories() {
     return Response.json(
       {
         message: "Category fetched successfully !!",
-        data: categories,
+        data: categories,  // we have to do response.data.data to get categories 
       },
       { status: 200 }
     );

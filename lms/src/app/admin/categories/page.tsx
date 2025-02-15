@@ -1,6 +1,7 @@
-// "use client";
+"use client";
 import { ICategory } from "@/database/models/category.schema";
-// import { useState } from "react";
+import { useEffect, useState } from "react";
+import Modal from "../components/model/Modal";
 
 async function fetchCategories() {
   try {
@@ -13,17 +14,37 @@ async function fetchCategories() {
   }
 }
 
-async function Categories() {
-  // const [isModalOpen, setIsModalOpen] = useState(false);
-  const { data: categories } = await fetchCategories();
+function Categories() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [categories, setCategories] = useState([]);
 
-  // const openModal = () => setIsModalOpen(true);
-  // const closeModal = () => setIsModalOpen(false);
+  // we are not doing this code in client side so call this from by making wrapper function in useEffect code below
+  // const { data: categories } = await fetchCategories(); // response.data ma purai json aauxa but ma data matra linxu bane paxi we have to do response.data.data to get data but we do destructure to get specific field value. data ko nam categories ho hai
+
+  // console.log(categories);
+
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
   // console.log("isModalOpen: ",isModalOpen);
+
+  // useEffect( async() => {
+  //     const { data } = await fetchCategories();
+  // }, []);
+
+  useEffect(() => {
+    const getCategories = async () => {
+      const { data } = await fetchCategories();
+      setCategories(data);
+    };
+    getCategories();
+  }, []); // An empty [] means the effect runs only once, when the component first loads. It won’t run again unless the component is removed and added back.
 
   return (
     <div className="flex flex-col">
       <div className=" overflow-x-auto">
+        {/* isModalOpen is true then Modal.jsx trigger hunxa */}
+        {isModalOpen && <Modal closeModal={closeModal} />}
+
         <div className="min-w-full inline-block align-middle">
           <div className="relative  text-gray-500 focus-within:text-gray-900 mb-4">
             <div className="absolute inset-y-0 left-1 flex items-center pl-3 pointer-events-none ">
@@ -63,13 +84,12 @@ async function Categories() {
                 placeholder="Search for company"
               />
 
-              {/* <button
+              <button
                 className="bg-blue-500 text-white rounded p-2"
                 onClick={openModal}
               >
                 + Category
-              </button> */}
-
+              </button>
             </div>
           </div>
           <div className="overflow-hidden ">
@@ -113,7 +133,7 @@ async function Categories() {
                   </th>
                 </tr>
               </thead>
-              
+
               <tbody className="divide-y divide-gray-300 ">
                 {categories.length > 0 &&
                   categories.map((category: ICategory) => {
