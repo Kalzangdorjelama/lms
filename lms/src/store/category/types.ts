@@ -17,6 +17,6 @@ export interface ICategory {
 }
 
 export interface ICategoriesInitialState {
-  categories: ICategory[]; // ICategory bitra object aauxa jasma mati ko  field haru aauxa and store it in array hai
+  categories: ICategory[]; // ICategory bitra object aauxa jasma mati ko field haru aauxa and store it in array hai
   status: Status;
 }

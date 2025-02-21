@@ -1,6 +1,8 @@
 import Categories from "@/app/admin/categories/page";
 import { createSlice } from "@reduxjs/toolkit";
 import { Status, ICategory, ICategoriesInitialState } from "./types";
+import axios from "axios";
+import { AppDispatch } from "../store";
 
 export const datas: ICategoriesInitialState = {
   categories: [],
@@ -12,11 +14,11 @@ const categorySlice = createSlice({
   name: "category",
   initialState: datas,
   reducers: {
-    setCategories(state, action) {
-      state.status = action.payload;
-    },
     setStatus(state, action) {
       state.status = action.payload;
+    },
+    setCategories(state, action) {
+      state.categories = action.payload;
     },
   },
 });
@@ -26,3 +28,20 @@ const categorySlice = createSlice({
 
 const { setCategories, setStatus } = categorySlice.actions;
 export default categorySlice.reducer; // reducers pural ma lakda error aaxuxa so singular reducer
+
+export function fetchCategories() {
+  return async function fetchCategoriesThunk(dispatch: AppDispatch) {
+    try {
+      const response = await axios.get("http://localhost:3000/api/category");
+      if (response.status === 200) {
+        dispatch(setStatus(Status.Success));
+        dispatch(setCategories(response.data.data));
+      } else {
+        dispatch(setStatus(Status.Error));
+      }
+    } catch (error) {
+      console.log(error);
+      dispatch(setStatus(Status.Error));
+    }
+  };
+}

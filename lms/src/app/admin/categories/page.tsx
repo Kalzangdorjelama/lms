@@ -2,42 +2,52 @@
 import { ICategory } from "@/database/models/category.schema";
 import { useEffect, useState } from "react";
 import Modal from "../components/model/Modal";
+import { fetchCategories } from "@/store/category/categorySlice";
+import { useAppDispatch, useAppSelector } from "@/store/hooks"
 
-async function fetchCategories() {
-  try {
-    const response = await fetch("http://localhost:3000/api/category");
-    if (!response.ok)
-      throw new Error("Failed to fetch categories, something went wrong");
-    return response.json();
-  } catch (error) {
-    console.log(error);
-  }
-}
+// this below code is written in CategorySlice.ts for better optimization 
+// async function fetchCategories() {
+//   try {
+//     const response = await fetch("http://localhost:3000/api/category");
+//     if (!response.ok)
+//       throw new Error("Failed to fetch categories, something went wrong");
+//     return response.json();
+//   } catch (error) {
+//     console.log(error);
+//   }
+// }
+
 
 function Categories() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [categories, setCategories] = useState([]);
+  // const [categories, setCategories] = useState([]);
 
   // we are not doing this code in client side so call this from by making wrapper function in useEffect code below
   // const { data: categories } = await fetchCategories(); // response.data ma purai json aauxa but ma data matra linxu bane paxi we have to do response.data.data to get data but we do destructure to get specific field value. data ko nam categories ho hai
-
   // console.log(categories);
+
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
   // console.log("isModalOpen: ",isModalOpen);
 
-  // useEffect( async() => {
-  //     const { data } = await fetchCategories();
-  // }, []);
 
-  useEffect(() => {
-    const getCategories = async () => {
-      const { data } = await fetchCategories();
-      setCategories(data);
-    };
-    getCategories();
-  }, []); // An empty [] means the effect runs only once, when the component first loads. It won’t run again unless the component is removed and added back.
+  const dispatch = useAppDispatch()
+  // Google: https://drive.google.com/file/d/19KvODoa8BxTJVFWV3Wtrbg91rmWjLDvD/view
+  const {categories} = useAppSelector((store)=>store.categories)
+
+
+  useEffect( ()=>{
+    dispatch(fetchCategories())
+   },[])
+
+
+  // useEffect(() => {
+  //     dispatch(fetchCategories())
+  //     setCategories(data);
+  //     getCategories();
+  // }, []); // An empty [] means the effect runs only once, when the component first loads. It won’t run again unless the component is removed and added back.
+
 
   return (
     <div className="flex flex-col">
@@ -136,7 +146,7 @@ function Categories() {
 
               <tbody className="divide-y divide-gray-300 ">
                 {categories.length > 0 &&
-                  categories.map((category: ICategory) => {
+                  categories.map((category) => {
                     return (
                       <tr
                         key={category._id}
