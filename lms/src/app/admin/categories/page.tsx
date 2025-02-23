@@ -1,11 +1,11 @@
 "use client";
-import { ICategory } from "@/database/models/category.schema";
-import { useEffect, useState } from "react";
+import Category, { ICategory } from "@/database/models/category.schema";
+import { useEffect, useState,useRef, useCallback } from "react";
 import Modal from "../components/model/Modal";
-import { fetchCategories } from "@/store/category/categorySlice";
-import { useAppDispatch, useAppSelector } from "@/store/hooks"
+import { deleteCategory, fetchCategories } from "@/store/category/categorySlice";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 
-// this below code is written in CategorySlice.ts for better optimization 
+// this below code is written in CategorySlice.ts for better optimization
 // async function fetchCategories() {
 //   try {
 //     const response = await fetch("http://localhost:3000/api/category");
@@ -17,9 +17,9 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks"
 //   }
 // }
 
-
 function Categories() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("")
   // const [categories, setCategories] = useState([]);
 
   // we are not doing this code in client side so call this from by making wrapper function in useEffect code below
@@ -27,20 +27,36 @@ function Categories() {
   // console.log(categories);
 
 
-  const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
+  // const openModal = () => setIsModalOpen(true);
+  // const closeModal = () => setIsModalOpen(false);
   // console.log("isModalOpen: ",isModalOpen);
 
+  // above code work but for more optimization better use useCallback hook as if we are passing any function as a props to any component then it will create every time in the re-render so to prevent it hami useCallback hook bitra pass garxau so it it create an instance and EXISTING one is USED hai and every time re-render huda create hudai that is above two function openModal , closeModal
+  const openModal = useCallback(() =>setIsModalOpen(true),[])
+  const closeModal = useCallback(() => setIsModalOpen(false),[]);
 
-  const dispatch = useAppDispatch()
+  // const openModalRef = useRef<() => void | null >(null)
+  // if(openModalRef.current){
+  //   console.log("function ko instance Change vayo !!!", openModalRef.current !== openModal);
+  // }
+  // openModalRef.current = openModal
+
+
+  const dispatch = useAppDispatch();
+  const deleteCat = (id:string) => {
+    if(id){
+
+      dispatch(deleteCategory(id))
+    }
+
+  }
+
   // Google: https://drive.google.com/file/d/19KvODoa8BxTJVFWV3Wtrbg91rmWjLDvD/view
-  const {categories} = useAppSelector((store)=>store.categories)
+  const { categories } = useAppSelector((store) => store.categories);
 
-
-  useEffect( ()=>{
-    dispatch(fetchCategories())
-   },[])
-
+  useEffect(() => {
+    dispatch(fetchCategories());
+  }, []);
 
   // useEffect(() => {
   //     dispatch(fetchCategories())
@@ -48,11 +64,11 @@ function Categories() {
   //     getCategories();
   // }, []); // An empty [] means the effect runs only once, when the component first loads. It won’t run again unless the component is removed and added back.
 
-
+  const filteredCategories = categories.filter((category) => category.name.toLowerCase().includes(searchTerm.toLocaleLowerCase()) || category._id.toLowerCase().includes(searchTerm.toLocaleLowerCase()));
   return (
     <div className="flex flex-col">
       <div className=" overflow-x-auto">
-        {/* isModalOpen is true then Modal.jsx trigger hunxa */}
+        {/* isModalOpen xa ki xaina check garxa if yes then Modal.jsx trigger hunxa */}
         {isModalOpen && <Modal closeModal={closeModal} />}
 
         <div className="min-w-full inline-block align-middle">
@@ -88,6 +104,7 @@ function Categories() {
             </div>
             <div className="flex justify-between">
               <input
+                onChange={(e) => setSearchTerm(e.target.value)}
                 type="text"
                 id="default-search"
                 className="block w-80 h-11 pr-5 pl-12 py-2.5 text-base font-normal shadow-xs text-gray-900 bg-transparent border border-gray-300 rounded-full placeholder-gray-400 focus:outline-none"
@@ -145,8 +162,8 @@ function Categories() {
               </thead>
 
               <tbody className="divide-y divide-gray-300 ">
-                {categories.length > 0 &&
-                  categories.map((category) => {
+                {filteredCategories.length > 0 &&
+                  filteredCategories.map((category) => {
                     return (
                       <tr
                         key={category._id}
@@ -185,7 +202,7 @@ function Categories() {
                                 />
                               </svg>
                             </button>
-                            <button className="p-2 rounded-full  group transition-all duration-500  flex item-center">
+                            <button onClick={() => deleteCat(category._id)} className="p-2 rounded-full  group transition-all duration-500  flex item-center">
                               <svg
                                 width={20}
                                 height={20}
@@ -200,23 +217,7 @@ function Categories() {
                                 />
                               </svg>
                             </button>
-                            <button className="p-2 rounded-full  group transition-all duration-500  flex item-center">
-                              <svg
-                                width={20}
-                                height={20}
-                                viewBox="0 0 20 20"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                              >
-                                <path
-                                  className="stroke-black "
-                                  d="M10.0161 14.9897V15.0397M10.0161 9.97598V10.026M10.0161 4.96231V5.01231"
-                                  stroke="black"
-                                  strokeWidth="2.5"
-                                  strokeLinecap="round"
-                                />
-                              </svg>
-                            </button>
+                           
                           </div>
                         </td>
                       </tr>

@@ -3,6 +3,7 @@ import Category from "@/database/models/category.schema";
 import { NextRequest } from "next/server";
 import authMiddleware from "../../../../middleware/auth.middleware";
 
+// createCategory controller
 export async function createCategory(req: Request) {
   try {
     // authMiddleware(req as NextRequest);
@@ -21,7 +22,7 @@ export async function createCategory(req: Request) {
         }
       );
     }
-    const createCategory = await Category.create({
+    const category = await Category.create({
       name: name,
       description: description,
       //   key ra value same xa bane yauta matra lakda hunxa like below
@@ -31,7 +32,7 @@ export async function createCategory(req: Request) {
     return Response.json(
       {
         message: "Category is succesfully created",
-        data: createCategory,
+        data: category,
       },
       {
         status: 201,
@@ -50,6 +51,7 @@ export async function createCategory(req: Request) {
   }
 }
 
+// getCategory controller
 export async function getCategories() {
   try {
     await dbConnect();
@@ -67,7 +69,7 @@ export async function getCategories() {
     return Response.json(
       {
         message: "Category fetched successfully !!",
-        data: categories,  // we have to do response.data.data to get categories 
+        data: categories,   // we have to do response.data.data to get categories here
       },
       { status: 200 }
     );
@@ -76,6 +78,36 @@ export async function getCategories() {
     return Response.json(
       {
         message: "something went wrong",
+      },
+      { status: 500 }
+    );
+  }
+}
+
+// deleteCategory controller
+export async function deleteCategory(id:string) {
+  try {
+    await dbConnect();
+    const deleted = await Category.findByIdAndDelete(id);
+    if (!deleted) {
+      return Response.json(
+        {
+          message: "something went wrong",
+        },
+        { status: 400 }
+      );
+    }
+    return Response.json(
+      {
+        message: "category is deleted Successfully",
+      },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.log(error);
+    return Response.json(
+      {
+        message: "something went wrong in server side",
       },
       { status: 500 }
     );

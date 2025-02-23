@@ -1,6 +1,10 @@
 "use client";
 // import { headers } from "next/headers";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { createCategory, resetStatus } from "@/store/category/categorySlice";
+import { log } from "console";
+import { Status } from "@/store/category/types";
 
 // interface IModalProps {
 //   closeModal: () => void;
@@ -9,40 +13,53 @@ import { ChangeEvent, useState } from "react";
 // below return code
 // we ca write also like this
 
-
-
 function Modal({ closeModal }: { closeModal: () => void }) {
   const [name, setName] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [loading, setLoading] = useState(false);
+  const dispatch = useAppDispatch();
+  const { status } = useAppSelector((store) => store.categories);
+  console.log("status from the categorySlice: ", status);
 
+  // e i.e event ko type-->     ChangeEvent<HTMLFormElement>    ho hai goka haha
   const handleSubmit = async (e: ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-    try {
-      const response = await fetch("http://localhost:3000/api/category", {
-        method: "POST",
-        headers: {
-          "content-Type": "application/json", // for string type ko data ko lagi "content-Type": "application/json" hunu parxa
-          // "content-Type":"multipart/form-data" // for file type ko data ko lagi "content-Type":"multipart/form-data" hunu parxa
-        },
-        body: JSON.stringify({
-          name,
-          description,
-        }),
-      });
-      if (response.ok) {
-        alert("Category added Successfully");
-        closeModal();
-      } else {
-        alert("something went wrong");
-      }
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
+    dispatch(createCategory({ name, description }));
+
+    // below post data can be make more optimize as we write it in the categorySlice.ts
+    // try {
+    //   const response = await fetch("http://localhost:3000/api/category", {
+    //     method: "POST",
+    //     headers: {
+    //       "content-Type": "application/json", // for string type ko data ko lagi "content-Type": "application/json" hunu parxa
+    //       // "content-Type":"multipart/form-data" // for file type ko data ko lagi "content-Type":"multipart/form-data" hunu parxa
+    //     },
+    //     body: JSON.stringify({
+    //       name,
+    //       description,
+    //     }),
+    //   });
+    //   if (response.ok) {
+    //     alert("Category added Successfully");
+    //     closeModal();
+    //   } else {
+    //     alert("something went wrong");
+    //   }
+    // } catch (error) {
+    //   console.log(error);
+    // } finally {
+    //   setLoading(false);
+    // }
   };
+
+  useEffect(() => {
+    if (status === Status.Success) {
+      setLoading(false);
+      closeModal();
+      dispatch(resetStatus());
+    }
+  }, [status]);
 
   return (
     <div
@@ -121,11 +138,13 @@ function Modal({ closeModal }: { closeModal: () => void }) {
               >
                 Cancel
               </button>
-              <button disabled={loading}
+              <button
+                disabled={loading}
                 id="submitUrlButton"
                 className="flex items-center justify-center px-4 py-2 text-sm font-medium text-white rounded-md bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 dark:from-indigo-500 dark:to-violet-500 dark:hover:from-indigo-600 dark:hover:to-violet-600"
               >
-                {loading ? "Adding...":"Add Category"}
+                {loading ? "Adding..." : "Add Category"}
+
                 <svg
                   className="h-4 w-4 inline-block ml-2"
                   xmlns="http://www.w3.org/2000/svg"

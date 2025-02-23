@@ -1,3 +1,4 @@
+import { deleteCategory } from "@/store/category/categorySlice";
 import { createCategory, getCategories } from "./category.controller";
 
 export async function POST(req: Request) {
