@@ -182,7 +182,7 @@ function Categories() {
                         </td>
                         <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
                           {" "}
-                          {category.createdAt.toString()}
+                          {new Date(category.createdAt.toString()).toLocaleDateString()}
                         </td>
                         <td className=" p-5 ">
                           <div className="flex items-center gap-1">
