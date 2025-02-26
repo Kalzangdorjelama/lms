@@ -13,6 +13,7 @@ const courseSchema = new Schema<ICourse>({
   title: {
     type: String,
     required: true,
+    unique: true,
   },
   description: {
     type: String,
@@ -30,12 +31,12 @@ const courseSchema = new Schema<ICourse>({
     type: Schema.Types.ObjectId,
     ref: "Category",
   },
-  lessons: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: "Lesson",
-    },
-  ],
+  // lessons: [
+  //   {
+  //     type: Schema.Types.ObjectId,
+  //     ref: "Lesson",
+  //   },
+  // ],
   createdAt: {
     type: Date,
     default: Date.now(),

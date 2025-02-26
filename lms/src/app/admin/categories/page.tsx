@@ -5,6 +5,9 @@ import Modal from "../components/model/Modal";
 import { deleteCategory, fetchCategories } from "@/store/category/categorySlice";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 
+// my code
+import { editCategory } from "@/store/category/categorySlice";
+
 // this below code is written in CategorySlice.ts for better optimization
 // async function fetchCategories() {
 //   try {
@@ -45,11 +48,22 @@ function Categories() {
   const dispatch = useAppDispatch();
   const deleteCat = (id:string) => {
     if(id){
-
       dispatch(deleteCategory(id))
     }
-
   }
+
+
+
+  // ========== my code =========== 
+  const editCat = (id:string) => {
+    if(id){
+      dispatch(editCategory(id))
+    }
+  }
+  // ==============================
+
+
+
 
   // Google: https://drive.google.com/file/d/19KvODoa8BxTJVFWV3Wtrbg91rmWjLDvD/view
   const { categories } = useAppSelector((store) => store.categories);
@@ -186,7 +200,8 @@ function Categories() {
                         </td>
                         <td className=" p-5 ">
                           <div className="flex items-center gap-1">
-                            <button className="p-2  rounded-full  group transition-all duration-500  flex item-center">
+                            <button onClick={() => editCat(category._id)} className="p-2  rounded-full  group transition-all duration-500  flex item-center">
+                            
                               <svg
                                 className="cursor-pointer"
                                 width={20}
@@ -202,6 +217,8 @@ function Categories() {
                                 />
                               </svg>
                             </button>
+
+                            {/* my code  deleteCat wala*/}
                             <button onClick={() => deleteCat(category._id)} className="p-2 rounded-full  group transition-all duration-500  flex item-center">
                               <svg
                                 width={20}

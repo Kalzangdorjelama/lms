@@ -35,6 +35,13 @@ const categorySlice = createSlice({
         state.categories.splice(index, 1);
       }
     },
+
+
+    // ======== my code ========= 
+    editCategoryBYIndex(state,action){
+      state.categories = action.payload
+    }
+    // ==========================
   },
 });
 
@@ -103,3 +110,22 @@ export function deleteCategory(id: string) {
     }
   };
 }
+
+
+// ================= my code ====================
+export function editCategory(id:string){
+  return async function deleteCategoryThunk(dispatch: AppDispatch) {
+    try {
+      const response = await API.put("/category/" + id);
+      console.log("edit id wala: ",response);
+      if(response.status === 200){
+        dispatch(setStatus(Status.Success))
+        dispatch(editCategory(id))
+      }
+    } catch (error) {
+      dispatch(setStatus(Status.Error));
+    }
+  };
+}
+
+// ================================================

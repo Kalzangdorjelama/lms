@@ -19,7 +19,13 @@ function Modal({ closeModal }: { closeModal: () => void }) {
   const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
   const { status } = useAppSelector((store) => store.categories);
-  console.log("status from the categorySlice: ", status);
+  // console.log("status from the categorySlice: ", status);
+
+
+  // ============= my code ============= 
+  const [editCategory, setEditCategory] = useState("")
+  // ===================================
+
 
   // e i.e event ko type-->     ChangeEvent<HTMLFormElement>    ho hai goka haha
   const handleSubmit = async (e: ChangeEvent<HTMLFormElement>) => {
