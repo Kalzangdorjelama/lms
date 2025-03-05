@@ -6,8 +6,7 @@ import { log } from "console";
 export async function createCourse(req: Request) {
   try {
     await dbConnect();
-    const { title, description, price, duration, category } =
-      await req.json();
+    const { title, description, price, duration, category } = await req.json();
     const data = await Course.create({
       title,
       description,
@@ -17,7 +16,7 @@ export async function createCourse(req: Request) {
     });
     return Response.json(
       {
-        message: "Course is created!",
+        message: "Course created!!",
         data,
       },
       { status: 201 }
@@ -26,7 +25,7 @@ export async function createCourse(req: Request) {
     console.log(error);
     return Response.json(
       {
-        message: "something went wrong",
+        message: "Something went wrong",
       },
       { status: 500 }
     );
@@ -36,7 +35,7 @@ export async function createCourse(req: Request) {
 export async function fetchCourses() {
   try {
     await dbConnect();
-    const data = await Course.find().populate("categoryId"); // find() le return array []
+    const data = await Course.find().populate("category"); // find() le return array []
     if (data.length == 0) {
       return Response.json(
         {
@@ -114,4 +113,3 @@ export async function deleteCourse(id: string) {
     );
   }
 }
-

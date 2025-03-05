@@ -23,7 +23,7 @@ function AdminSidebar(){
             </svg>
             Stats
           </Link>
-          <a
+          <Link
             href="/admin/students"
             className="flex items-center px-4 py-2 mt-2 text-gray-100 hover:bg-gray-700"
           >
@@ -41,7 +41,7 @@ function AdminSidebar(){
               />
             </svg>
             Students
-          </a>
+          </Link>
           <Link
             href="/admin/categories"
             className="flex items-center px-4 py-2 mt-2 text-gray-100 hover:bg-gray-700"

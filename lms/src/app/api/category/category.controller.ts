@@ -6,8 +6,12 @@ import authMiddleware from "../../../../middleware/auth.middleware";
 // createCategory controller
 export async function createCategory(req: Request) {
   try {
-    // authMiddleware(req as NextRequest);
     await dbConnect();
+    const response = await authMiddleware(req as NextRequest);
+    // console.log("response :", response);
+    if (response.status === 401) {
+      return response;
+    }
     const { name, description } = await req.json(); // req.body
     const existingCategory = await Category.findOne({
       name: name,
@@ -69,7 +73,7 @@ export async function getCategories() {
     return Response.json(
       {
         message: "Category fetched successfully !!",
-        data: categories,   // we have to do response.data.data to get categories here
+        data: categories, // we have to do response.data.data to get categories here
       },
       { status: 200 }
     );
@@ -85,9 +89,14 @@ export async function getCategories() {
 }
 
 // deleteCategory controller
-export async function deleteCategory(id:string) {
+export async function deleteCategory(req: Request, id: string) {
   try {
     await dbConnect();
+    const response = await authMiddleware(req as NextRequest);
+    // console.log("response :", response);
+    if (response.status === 401) {
+      return response;
+    }
     const deleted = await Category.findByIdAndDelete(id);
     if (!deleted) {
       return Response.json(
@@ -100,6 +109,7 @@ export async function deleteCategory(id:string) {
     return Response.json(
       {
         message: "category is deleted Successfully",
+        deleted,
       },
       { status: 200 }
     );

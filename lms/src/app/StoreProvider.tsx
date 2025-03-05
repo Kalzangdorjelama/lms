@@ -19,5 +19,4 @@ export default function StoreProvider({
   return <Provider store={storeRef.current}>{children}</Provider>;
 }
 
-
 // import chai global component i.e layout.tsx ma gare ko xa so as a wrapper banaye globally accessable banaye ko xa layout.tsx ma

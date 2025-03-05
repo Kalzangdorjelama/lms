@@ -6,7 +6,9 @@ function Dashboard({ children }: Readonly<{ children: React.ReactNode }>) {
       {/* sidebar */}
       <div className="hidden md:flex flex-col w-64 bg-gray-800">
         <div className="flex items-center justify-center h-16 bg-gray-900">
-          <span className="text-white font-bold uppercase">LMS</span>
+          <span className="text-white font-bold uppercase">
+            डिजिटल शिक्षा
+          </span>
         </div>
         <AdminSidebar />
       </div>
@@ -14,10 +16,10 @@ function Dashboard({ children }: Readonly<{ children: React.ReactNode }>) {
       <div className="flex flex-col flex-1 overflow-y-auto">
         <div className="flex items-center justify-between h-16 bg-white border-b border-gray-200">
           <div className="flex items-center px-4">
-            <button className="text-gray-500 focus:outline-none focus:text-gray-700">
+            <button className="text-gray-500 focus:outline-none focus:text-gray-700 ">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6"
+                className="h-9 w-7"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -30,13 +32,13 @@ function Dashboard({ children }: Readonly<{ children: React.ReactNode }>) {
                 />
               </svg>
             </button>
-            <input
+            {/* <input
               className="mx-4 w-full border rounded-md px-4 py-2"
               type="text"
               placeholder="Search"
-            />
+            /> */}
           </div>
-          <div className="flex items-center pr-4">
+          {/* <div className="flex items-center pr-4">
             <button className="flex items-center text-gray-500 hover:text-gray-700 focus:outline-none focus:text-gray-700">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -53,7 +55,7 @@ function Dashboard({ children }: Readonly<{ children: React.ReactNode }>) {
                 />
               </svg>
             </button>
-          </div>
+          </div> */}
         </div>
         <div className="p-4">{children}</div>
       </div>
