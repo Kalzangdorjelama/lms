@@ -22,11 +22,6 @@ function Modal({ closeModal }: { closeModal: () => void }) {
   // console.log("status from the categorySlice: ", status);
 
 
-  // ============= my code ============= 
-  const [editCategory, setEditCategory] = useState("")
-  // ===================================
-
-
   // e i.e event ko type-->     ChangeEvent<HTMLFormElement>    ho hai goka haha
   const handleSubmit = async (e: ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();

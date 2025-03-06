@@ -36,7 +36,7 @@ export async function fetchCourses() {
   try {
     await dbConnect();
     const data = await Course.find().populate("category"); // find() le return array []
-    if (data.length == 0) {
+    if (data.length === 0) {
       return Response.json(
         {
           message: "course NOT FOUND",

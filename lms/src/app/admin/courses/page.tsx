@@ -128,7 +128,7 @@ function Courses() {
                         <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
                           {" "}
                           {new Date(
-                            // course.createdAt.toString()
+                            course.createdAt.toString()
                           ).toLocaleDateString()}
                         </td>
                         <td className=" p-5 ">

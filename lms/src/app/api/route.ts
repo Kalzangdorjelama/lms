@@ -1,5 +1,5 @@
 import dbConnect from "@/database/connection";
-import { User } from "@/database/models/user.schema";
+import User from "@/database/models/user.schema";
 
 export async function GET() {
   dbConnect();

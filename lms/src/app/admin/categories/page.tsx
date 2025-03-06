@@ -52,19 +52,7 @@ function Categories() {
     }
   }
 
-
-
-  // ========== my code =========== 
-  const editCat = (id:string) => {
-    if(id){
-      dispatch(editCategory(id))
-    }
-  }
-  // ==============================
-
-
-
-
+  
   // Google: https://drive.google.com/file/d/19KvODoa8BxTJVFWV3Wtrbg91rmWjLDvD/view
   const { categories } = useAppSelector((store) => store.categories);
 
@@ -200,7 +188,7 @@ function Categories() {
                         </td>
                         <td className=" p-5 ">
                           <div className="flex items-center gap-1">
-                            <button onClick={() => editCat(category._id)} className="p-2  rounded-full  group transition-all duration-500  flex item-center">
+                            <button className="p-2  rounded-full  group transition-all duration-500  flex item-center">
                             
                               <svg
                                 className="cursor-pointer"
