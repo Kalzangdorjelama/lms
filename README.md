@@ -1,1 +1,1 @@
-# Learning Management System (LMS) using Next.js 
+# Learning Management System (LMS) 
