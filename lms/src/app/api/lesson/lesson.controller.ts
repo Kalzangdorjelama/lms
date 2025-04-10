@@ -39,7 +39,12 @@ export async function createLesson(req: Request) {
 export async function fetchLessons() {
   try {
     await dbConnect();
-    const data = await Lesson.find().populate("course");
+    const { courseId } = await req.json();
+
+    const data = await Lesson.find({
+      course:courseId
+
+    }).populate("course");
     if (data.length === 0) {
       return Response.json(
         {

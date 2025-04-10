@@ -1,37 +1,35 @@
 "use client";
+
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { useCallback, useEffect, useState } from "react";
-
-import { deleteCourse, fetchCourses } from "@/store/courses/courseSlice";
 import Modal from "./components/Model";
 import { redirect } from "next/navigation";
+import { deleteLesson, fetchLessons } from "@/store/lessons/lessonSlice";
 
-function Courses() {
+function lessons({ params }: { params: { id: string } }) {
+  const courseId = params.id;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const { courses } = useAppSelector((store) => store.courses);
+  const { lessons } = useAppSelector((store) => store.lessons);
   const dispatch = useAppDispatch();
   const openModal = useCallback(() => setIsModalOpen(true), []);
   const closeModal = useCallback(() => setIsModalOpen(false), []);
   useEffect(() => {
-    dispatch(fetchCourses());
+    dispatch(fetchLessons());
   }, []);
 
-  const filteredCourses = courses.filter(
-    (course) =>
-      course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      course.price.toString().includes(searchTerm) ||
-      course.category.name.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredLessons = lessons.filter((lesson) =>
+    lesson.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const handleDelete = (id: string) => {
-    id && dispatch(deleteCourse(id));
+    id && dispatch(deleteLesson(id));
   };
 
   return (
     <div className="flex flex-col">
       <div className=" overflow-x-auto">
-        {isModalOpen && <Modal closeModal={closeModal} />}
+        {isModalOpen && <Modal closeModal={closeModal} courseId={courseId} />}
         <div className="min-w-full inline-block align-middle">
           <div className="relative  text-gray-500 focus-within:text-gray-900 mb-4">
             <div className="absolute inset-y-0 left-1 flex items-center pl-3 pointer-events-none ">
@@ -75,7 +73,7 @@ function Courses() {
                 className="bg-blue-500 text-white rounded p-2"
                 onClick={openModal}
               >
-                + Course
+                + Lesson
               </button>
             </div>
           </div>
@@ -87,73 +85,55 @@ function Courses() {
                     scope="col"
                     className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize rounded-t-xl"
                   >
-                    Title
+                    {" "}
+                    Id{" "}
                   </th>
                   <th
                     scope="col"
                     className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize"
                   >
-                    Price
-                  </th>
-                  <th
-                    scope="col"
-                    className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize"
-                  >
-                    Duration
+                    {" "}
+                    Title{" "}
                   </th>
 
                   <th
                     scope="col"
                     className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize"
                   >
-                    Category
-                  </th>
-                  <th
-                    scope="col"
-                    className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize"
-                  >
-                    Created At
+                    {" "}
+                    Created At{" "}
                   </th>
                   <th
                     scope="col"
                     className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize rounded-t-xl"
                   >
-                    Actions
+                    {" "}
+                    Actions{" "}
                   </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-300 ">
-                {filteredCourses.length > 0 ? (
-                  filteredCourses.map((course) => {
+                {filteredLessons.length > 0 ? (
+                  filteredLessons.map((lesson) => {
                     return (
                       <tr
-                        key={course.title}
+                        key={lesson.title}
                         className="bg-white transition-all duration-500 hover:bg-gray-50"
                       >
-                        <td
-                          onClick={() =>
-                            redirect(`/admin/courses/${course?._id}/lessons`) // see it hai dorje lama
-                          }
-                          className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900 "
-                        >
-                          {course?.title}
-                        </td>
-                        <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900 ">
-                          {course?.price}
-                        </td>
                         <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
                           {" "}
-                          {course?.duration}
+                          {lesson?._id}
                         </td>
 
                         <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
                           {" "}
-                          {course?.category?.name}
+                          {lesson?.title}
                         </td>
+
                         <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
                           {" "}
                           {new Date(
-                            course.createdAt.toString()
+                            lesson.createdAt.toString()
                           ).toLocaleDateString()}
                         </td>
                         <td className=" p-5 ">
@@ -175,7 +155,7 @@ function Courses() {
                               </svg>
                             </button>
                             <button
-                              onClick={() => handleDelete(course._id)}
+                              onClick={() => handleDelete(lesson?._id)}
                               className="p-2 rounded-full  group transition-all duration-500  flex item-center"
                             >
                               <svg
@@ -200,7 +180,7 @@ function Courses() {
                 ) : (
                   <tr className="transition-all duration-500 w-full hover:bg-gray-50 w-3xs">
                     <td className="p-5 whitespace-nowrap leading-6 font-medium  text-gray-900 text-2xl">
-                      <span>search course not found </span>{" "}
+                      <span>search lesson not found</span>{" "}
                     </td>
                   </tr>
                 )}
@@ -213,4 +193,4 @@ function Courses() {
   );
 }
 
-export default Courses;
+export default lessons;

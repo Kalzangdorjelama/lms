@@ -1,56 +1,57 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Status } from "../category/types";
-import { ICourse, ICourseForData, IInitialData } from "./types";
+import { IInitialData, Ilesson, ILessonForData } from "./types";
 import { AppDispatch } from "../store";
 import API from "@/http";
 
-export const data: IInitialData = {
-  courses: [],
+const data: IInitialData = {
+  lessons: [],
   status: Status.Loading,
 };
 
-const courseSlice = createSlice({
-  name: "courses",
+const lessonSlice = createSlice({
+  name: "lessons",
   initialState: data,
   reducers: {
     setStatus(state: IInitialData, action: PayloadAction<Status>) {
       state.status = action.payload;
     },
-    setCourses(state: IInitialData, action: PayloadAction<ICourse[]>) {
-      state.courses = action.payload;
+    setLessons(state: IInitialData, action: PayloadAction<Ilesson[]>) {
+      state.lessons = action.payload;
     },
-    pushToCourses(state: IInitialData, action: PayloadAction<ICourse>) {
-      state.courses.push(action.payload);
+    pushToLessons(state: IInitialData, action: PayloadAction<Ilesson>) {
+      state.lessons.push(action.payload);
     },
     resetStatus(state) {
       state.status = Status.Loading;
     },
-    deleteCourseByIndex(state: IInitialData, action: PayloadAction<string>) {
-      const index = state.courses.findIndex(
-        (course) => course._id == action.payload
+    deleteLessonByIndex(state: IInitialData, action: PayloadAction<string>) {
+      const index = state.lessons.findIndex(
+        (lesson) => lesson._id == action.payload
       );
       if (index !== -1) {
-        state.courses.splice(index, 1);
+        state.lessons.splice(index, 1);
       }
     },
   },
 });
+
 export const {
-  setCourses,
   setStatus,
-  pushToCourses,
+  setLessons,
+  pushToLessons,
   resetStatus,
-  deleteCourseByIndex,
-} = courseSlice.actions;
+  deleteLessonByIndex,
+} = lessonSlice.actions;
 
-export default courseSlice.reducer;
+export default lessonSlice.reducer;
 
-export function fetchCourses() {
-  return async function fetchCoursesThunk(dispatch: AppDispatch) {
+export function fetchLessons(id: string) {
+  return async function fetchLessonsThunk(dispatch: AppDispatch) {
     try {
-      const response = await API.get("/course");
+      const response = await API.get("/lesson", { courseId: id });
       if (response.status == 200) {
-        dispatch(setCourses(response.data.data));
+        dispatch(setLessons(response.data.data));
       } else {
         dispatch(setStatus(Status.Error));
       }
@@ -61,13 +62,13 @@ export function fetchCourses() {
   };
 }
 
-export function createCourse(data: ICourseForData) {
+export function createLesson(data: ILessonForData) {
   return async function createCourseThunk(dispatch: AppDispatch) {
     try {
-      const response = await API.post("/course", data);
+      const response = await API.post("/lesson", data);
       if (response.status == 201) {
         dispatch(setStatus(Status.Success));
-        dispatch(pushToCourses(response.data.data));
+        dispatch(pushToLessons(response.data.data));
       } else {
         dispatch(setStatus(Status.Error));
       }
@@ -78,13 +79,13 @@ export function createCourse(data: ICourseForData) {
   };
 }
 
-export function deleteCourse(id: string) {
+export function deleteLesson(id: string) {
   return async function deleteCourseThunk(dispatch: AppDispatch) {
     try {
-      const response = await API.delete("/course/" + id);
+      const response = await API.delete("/lesson/" + id);
       if (response.status == 200) {
         dispatch(setStatus(Status.Success));
-        dispatch(deleteCourseByIndex(id));
+        dispatch(deleteLessonByIndex(id));
       } else {
         dispatch(setStatus(Status.Error));
       }

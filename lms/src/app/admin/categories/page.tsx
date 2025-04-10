@@ -1,8 +1,11 @@
 "use client";
 import Category, { ICategory } from "@/database/models/category.schema";
-import { useEffect, useState,useRef, useCallback } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import Modal from "../components/model/Modal";
-import { deleteCategory, fetchCategories } from "@/store/category/categorySlice";
+import {
+  deleteCategory,
+  fetchCategories,
+} from "@/store/category/categorySlice";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 
 // my code
@@ -22,21 +25,20 @@ import { editCategory } from "@/store/category/categorySlice";
 
 function Categories() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("")
+  const [searchTerm, setSearchTerm] = useState("");
   // const [categories, setCategories] = useState([]);
 
   // we are not doing this code in client side so call this from by making wrapper function in useEffect code below
   // const { data: categories } = await fetchCategories(); // response.data ma purai json aauxa but ma data matra linxu bane paxi we have to do response.data.data to get data but we do destructure to get specific field value. data ko nam categories ho hai
   // console.log(categories);
 
-
   // const openModal = () => setIsModalOpen(true);
   // const closeModal = () => setIsModalOpen(false);
   // console.log("isModalOpen: ",isModalOpen);
 
   // above code work but for more optimization better use useCallback hook as if we are passing any function as a props to any component then it will create every time in the re-render so to prevent it hami useCallback hook bitra pass garxau so it it create an instance and EXISTING one is USED hai and every time re-render huda create hudai that is above two function openModal , closeModal
-  const openModal = useCallback(() =>setIsModalOpen(true),[])
-  const closeModal = useCallback(() => setIsModalOpen(false),[]);
+  const openModal = useCallback(() => setIsModalOpen(true), []);
+  const closeModal = useCallback(() => setIsModalOpen(false), []);
 
   // const openModalRef = useRef<() => void | null >(null)
   // if(openModalRef.current){
@@ -44,15 +46,13 @@ function Categories() {
   // }
   // openModalRef.current = openModal
 
-
   const dispatch = useAppDispatch();
-  const deleteCat = (id:string) => {
-    if(id){
-      dispatch(deleteCategory(id))
+  const deleteCat = (id: string) => {
+    if (id) {
+      dispatch(deleteCategory(id));
     }
-  }
+  };
 
-  
   // Google: https://drive.google.com/file/d/19KvODoa8BxTJVFWV3Wtrbg91rmWjLDvD/view
   const { categories } = useAppSelector((store) => store.categories);
 
@@ -66,7 +66,11 @@ function Categories() {
   //     getCategories();
   // }, []); // An empty [] means the effect runs only once, when the component first loads. It won’t run again unless the component is removed and added back.
 
-  const filteredCategories = categories.filter((category) => category.name.toLowerCase().includes(searchTerm.toLocaleLowerCase()) || category._id.toLowerCase().includes(searchTerm.toLocaleLowerCase()));
+  const filteredCategories = categories.filter(
+    (category) =>
+      category.name.toLowerCase().includes(searchTerm.toLocaleLowerCase()) ||
+      category._id.toLowerCase().includes(searchTerm.toLocaleLowerCase())
+  );
   return (
     <div className="flex flex-col">
       <div className=" overflow-x-auto">
@@ -110,7 +114,7 @@ function Categories() {
                 type="text"
                 id="default-search"
                 className="block w-80 h-11 pr-5 pl-12 py-2.5 text-base font-normal shadow-xs text-gray-900 bg-transparent border border-gray-300 rounded-full placeholder-gray-400 focus:outline-none"
-                placeholder="Search for company"
+                placeholder="Search for categories"
               />
 
               <button
@@ -164,7 +168,7 @@ function Categories() {
               </thead>
 
               <tbody className="divide-y divide-gray-300 ">
-                {filteredCategories.length > 0 &&
+                {filteredCategories.length > 0 ? (
                   filteredCategories.map((category) => {
                     return (
                       <tr
@@ -184,12 +188,13 @@ function Categories() {
                         </td>
                         <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
                           {" "}
-                          {new Date(category.createdAt.toString()).toLocaleDateString()}
+                          {new Date(
+                            category.createdAt.toString()
+                          ).toLocaleDateString()}
                         </td>
                         <td className=" p-5 ">
                           <div className="flex items-center gap-1">
                             <button className="p-2  rounded-full  group transition-all duration-500  flex item-center">
-                            
                               <svg
                                 className="cursor-pointer"
                                 width={20}
@@ -207,7 +212,10 @@ function Categories() {
                             </button>
 
                             {/* my code  deleteCat wala*/}
-                            <button onClick={() => deleteCat(category._id)} className="p-2 rounded-full  group transition-all duration-500  flex item-center">
+                            <button
+                              onClick={() => deleteCat(category._id)}
+                              className="p-2 rounded-full  group transition-all duration-500  flex item-center"
+                            >
                               <svg
                                 width={20}
                                 height={20}
@@ -222,12 +230,18 @@ function Categories() {
                                 />
                               </svg>
                             </button>
-                           
                           </div>
                         </td>
                       </tr>
                     );
-                  })}
+                  })
+                ) : (  
+                  <tr className="transition-all duration-500 w-full hover:bg-gray-50 w-3xs">
+                    <td className="p-5 whitespace-nowrap leading-6 font-medium  text-gray-900 text-2xl">
+                      <span>search categories not found </span>{" "}
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>
