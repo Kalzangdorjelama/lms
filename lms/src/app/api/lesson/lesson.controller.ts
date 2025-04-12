@@ -36,19 +36,20 @@ export async function createLesson(req: Request) {
   }
 }
 
-export async function fetchLessons() {
+export async function fetchLessons(req:Request) {
   try {
     await dbConnect();
-    const { courseId } = await req.json();
-
+    const {searchParams} = new URL(req.url)
+    const courseId = searchParams.get("courseId")
+    // console.log("IUD",courseId );
     const data = await Lesson.find({
       course:courseId
-
     }).populate("course");
     if (data.length === 0) {
       return Response.json(
         {
           message: "no Lesson found",
+          data: []
         },
         { status: 404 }
       );

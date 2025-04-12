@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Status } from "../category/types";
-import { IInitialData, Ilesson, ILessonForData } from "./types";
+import { IInitialData, ILesson, ILessonForData } from "./types";
 import { AppDispatch } from "../store";
 import API from "@/http";
 
@@ -16,10 +16,10 @@ const lessonSlice = createSlice({
     setStatus(state: IInitialData, action: PayloadAction<Status>) {
       state.status = action.payload;
     },
-    setLessons(state: IInitialData, action: PayloadAction<Ilesson[]>) {
+    setLessons(state: IInitialData, action: PayloadAction<ILesson[]>) {
       state.lessons = action.payload;
     },
-    pushToLessons(state: IInitialData, action: PayloadAction<Ilesson>) {
+    pushToLessons(state: IInitialData, action: PayloadAction<ILesson>) {
       state.lessons.push(action.payload);
     },
     resetStatus(state) {
@@ -49,13 +49,14 @@ export default lessonSlice.reducer;
 export function fetchLessons(id: string) {
   return async function fetchLessonsThunk(dispatch: AppDispatch) {
     try {
-      const response = await API.get("/lesson", { courseId: id });
+      const response = await API.get("/lesson?courseId=" + id); // pass a data in a query form
       if (response.status == 200) {
         dispatch(setLessons(response.data.data));
       } else {
         dispatch(setStatus(Status.Error));
       }
     } catch (error) {
+      dispatch(setLessons([]))
       console.log(error);
       dispatch(setStatus(Status.Error));
     }

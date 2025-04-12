@@ -3,11 +3,14 @@
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { useCallback, useEffect, useState } from "react";
 import Modal from "./components/Model";
-import { redirect } from "next/navigation";
+import { redirect, useParams } from "next/navigation";
 import { deleteLesson, fetchLessons } from "@/store/lessons/lessonSlice";
 
-function lessons({ params }: { params: { id: string } }) {
-  const courseId = params.id;
+function lessons() {
+  const data = useParams();
+  // console.log(data);
+  const courseId = data.id;
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const { lessons } = useAppSelector((store) => store.lessons);
@@ -15,12 +18,13 @@ function lessons({ params }: { params: { id: string } }) {
   const openModal = useCallback(() => setIsModalOpen(true), []);
   const closeModal = useCallback(() => setIsModalOpen(false), []);
   useEffect(() => {
-    dispatch(fetchLessons());
+    dispatch(fetchLessons(courseId as string));
   }, []);
 
   const filteredLessons = lessons.filter((lesson) =>
     lesson.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
+  
 
   const handleDelete = (id: string) => {
     id && dispatch(deleteLesson(id));
@@ -29,7 +33,9 @@ function lessons({ params }: { params: { id: string } }) {
   return (
     <div className="flex flex-col">
       <div className=" overflow-x-auto">
-        {isModalOpen && <Modal closeModal={closeModal} courseId={courseId} />}
+        {isModalOpen && (
+          <Modal closeModal={closeModal} courseId={courseId as string} />
+        )}
         <div className="min-w-full inline-block align-middle">
           <div className="relative  text-gray-500 focus-within:text-gray-900 mb-4">
             <div className="absolute inset-y-0 left-1 flex items-center pl-3 pointer-events-none ">
@@ -117,7 +123,7 @@ function lessons({ params }: { params: { id: string } }) {
                   filteredLessons.map((lesson) => {
                     return (
                       <tr
-                        key={lesson.title}
+                        key={lesson._id}
                         className="bg-white transition-all duration-500 hover:bg-gray-50"
                       >
                         <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
@@ -155,7 +161,9 @@ function lessons({ params }: { params: { id: string } }) {
                               </svg>
                             </button>
                             <button
-                              onClick={() => handleDelete(lesson?._id)}
+                              onClick={() =>
+                                handleDelete(lesson?._id as string)
+                              }
                               className="p-2 rounded-full  group transition-all duration-500  flex item-center"
                             >
                               <svg
