@@ -1,4 +1,5 @@
 "use client";
+import { fetchEnrollments } from "@/store/enrollments/enrollmentSlice";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { fetchStudents } from "@/store/students/studentSlice";
 import { useEffect, useState } from "react";
@@ -6,15 +7,19 @@ import { useEffect, useState } from "react";
 function Students() {
   const dispatch = useAppDispatch();
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const { students } = useAppSelector((store) => store.students);
+  const { enrollments } = useAppSelector((store) => store.enrollments);
   useEffect(() => {
-    dispatch(fetchStudents());
+    dispatch(fetchEnrollments());
   }, []);
-  const filteredStudents = students.filter(
-    (student) =>
-      student.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      student.email.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+
+
+  // const filteredStudents = enrollments.filter(
+  //   (enrollment) =>
+  //     enrollment.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
+  //   enrollment.email.toLowerCase().includes(searchTerm.toLowerCase())
+  // );
+
+
   return (
     <div className="flex flex-col">
       <div className=" overflow-x-auto">
@@ -49,6 +54,9 @@ function Students() {
                 />
               </svg>
             </div>
+
+
+
             <input
               type="text"
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -56,6 +64,9 @@ function Students() {
               className="block w-80 h-11 pr-5 pl-12 py-2.5 text-base font-normal shadow-xs text-gray-900 bg-transparent border border-gray-300 rounded-full placeholder-gray-400 focus:outline-none"
               placeholder="Search"
             />
+
+
+
           </div>
           <div className="overflow-hidden ">
             <table className=" min-w-full rounded-xl">
@@ -73,21 +84,28 @@ function Students() {
                     className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize"
                   >
                     {" "}
-                    UserName{" "}
+                    Student UserName{" "}
                   </th>
                   <th
                     scope="col"
                     className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize"
                   >
                     {" "}
-                    Email{" "}
+                    Course Name{" "}
                   </th>
                   <th
                     scope="col"
                     className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize"
                   >
                     {" "}
-                    Profile{" "}
+                    Enrollment Status{" "}
+                  </th>
+                  <th
+                    scope="col"
+                    className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize"
+                  >
+                    {" "}
+                    Whatspp Number{" "}
                   </th>
                   <th
                     scope="col"
@@ -99,27 +117,31 @@ function Students() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-300 ">
-                {filteredStudents.length > 0 &&
-                  filteredStudents.map((student) => {
+                {enrollments.length > 0 &&
+                  enrollments.map((enrollment) => {
                     return (
                       <tr
-                        key={student?._id}
+                        key={enrollment?.student?._id}
                         className="bg-white transition-all duration-500 hover:bg-gray-50"
                       >
                         <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900 ">
-                          {student?._id}{" "}
+                          {enrollment?._id}{" "}
                         </td>
                         <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
                           {" "}
-                          {student?.username}{" "}
+                          {enrollment?.student?.username}{" "}
                         </td>
                         <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
                           {" "}
-                          {student?.email}
+                          {enrollment?.course?.title}
                         </td>
                         <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
                           {" "}
-                          {student?.profileImage}
+                          {enrollment?.enrollmentStatus}
+                        </td>
+                        <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
+                          {" "}
+                          {enrollment?.whatapp}
                         </td>
                         <td className=" p-5 ">
                           <div className="flex items-center gap-1">

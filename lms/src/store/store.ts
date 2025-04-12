@@ -2,6 +2,8 @@ import { configureStore } from "@reduxjs/toolkit";
 import categorySlice from "./category/categorySlice";
 import courseSlice from "./courses/courseSlice";
 import lessonSlice from "./lessons/lessonSlice";
+import studentSlice from "./students/studentSlice";
+import enrollmentSlice from "./enrollments/enrollmentSlice";
 
 export const makeStore = () => {
   return configureStore({
@@ -9,6 +11,9 @@ export const makeStore = () => {
       categories: categorySlice,
       courses: courseSlice,
       lessons: lessonSlice,
+      students: studentSlice,
+      enrollments: enrollmentSlice,
+      
     },
   });
 };
