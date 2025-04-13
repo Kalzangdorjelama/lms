@@ -4,12 +4,12 @@ import { EnrollmentStatus } from "@/database/models/enrollment.schema";
 import { AppDispatch } from "../store";
 import API from "@/http";
 import { IEnrollment, IInitialData } from "./types";
-
-
+import { IEnrollmentData } from "../courses/courseSlice";
 
 const data: IInitialData = {
   status: Status.Loading,
   enrollments: [],
+  paymentUrl: null,
 };
 
 const enrollmentSlice = createSlice({
@@ -22,19 +22,44 @@ const enrollmentSlice = createSlice({
     setEnrollment(state: IInitialData, action: PayloadAction<IEnrollment[]>) {
       state.enrollments = action.payload;
     },
+    setPaymentUrl(state, action) {
+      state.paymentUrl = action.payload;
+    },
   },
 });
 
-const { setStatus, setEnrollment } = enrollmentSlice.actions;
+const { setStatus, setEnrollment, setPaymentUrl } = enrollmentSlice.actions;
 export default enrollmentSlice.reducer;
+
+export function enrollCourse(data: IEnrollmentData) {
+  return async function enrollCourseThunk(dispatch: AppDispatch) {
+    try {
+      const response = await API.post("/enrollment", data);
+      if (response.status == 201) {
+        dispatch(setStatus(Status.Success));
+        window.location.href = response.data.data.paymentUrl
+
+        // dispatch(pushToCourses(response.data.data));
+      } else {
+        dispatch(setStatus(Status.Error));
+      }
+    } catch (error) {
+      console.log(error);
+      dispatch(setStatus(Status.Error));
+    }
+  };
+}
 
 export function fetchEnrollments() {
   return async function fetchEnrollmentsThunks(dispatch: AppDispatch) {
     try {
       const response = await API.get("/enrollment");
-      if (response.status === 200) {
+      if (response.status === 201) {
         dispatch(setStatus(Status.Success));
         dispatch(setEnrollment(response.data.data));
+        if (response.data.data.paymentUrl) {
+          dispatch(setPaymentUrl(response.data.data.paymentUrl));
+        }
       } else {
         dispatch(setStatus(Status.Error));
       }

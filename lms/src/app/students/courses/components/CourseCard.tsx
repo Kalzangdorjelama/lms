@@ -34,13 +34,16 @@ function CourseCard({ course }: { course: ICourse }) {
                 </div>
               </div>
               <div className="flex items-center  ml-4">
-                <button
-                  onClick={()=>openModal(course?._id as string)}
-                  className="bg-blue-500 p-2 hover:bg-blue-700 mr-10"
+              <button
+                  onClick={() => openModal(course?._id as string)}
+                  className="flex items-center bg-indigo-600 hover:bg-indigo-700 px-2 py-3 rounded-lg text-white font-medium transition-all duration-300 transform hover:-translate-y-0.5"
                 >
-                  Enroll
+                  <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                  </svg>
+                  Enroll Now
                 </button>
-                <span className="text-sm text-gray-400 mr-10">
+                <span className="text-sm text-gray-400 mr-10 px-9">
                   Duration: {course?.duration}
                 </span>
                 <span className="text-sm text-gray-400 mr-10">

@@ -14,9 +14,9 @@ function AdminLayout({ children }: Readonly<{ children: React.ReactNode }>) {
     if (status === "loading") return; // return ma <p>please login</p> garda ni bayo
     // @ts-ignore    // NOTE: @ts-ignore is a TypeScript compiler directive used to ignore TypeScript errors on the next line. It tells TypeScript not to check for type errors on that specific line.
     
+    // if (!session || session.user.role != "student") {
+      
     if (!session) {
-        // if (!session || session.user.role != "student") {
-
       redirect("/"); // in react js ma useNavigate same as in nextjs ma redirect kunai page na pathau xa here home page ma patahu xa FOR MORE DETAIL ==> useNavigate() is a React Router hook used for programmatic navigation within a React application. It allows you to change the current URL dynamically without reloading the page.
     }
   }, [session, status]);

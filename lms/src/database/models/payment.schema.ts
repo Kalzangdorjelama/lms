@@ -10,7 +10,7 @@ interface IPayment extends Document {
   enrollment: mongoose.Types.ObjectId;
   amount: number;
   status: Status;
-  paymentMethod: PaymentMethod
+  paymentMethod: PaymentMethod;
 }
 
 export enum PaymentMethod {
@@ -21,7 +21,7 @@ export enum PaymentMethod {
 const paymentSchema = new Schema<IPayment>({
   enrollment: {
     type: Schema.Types.ObjectId,
-    ref: "Enrollment"
+    ref: "Enrollment",
   },
   amount: {
     type: Number,
@@ -34,12 +34,10 @@ const paymentSchema = new Schema<IPayment>({
   },
   paymentMethod: {
     type: String,
-    enum: [PaymentMethod.Esewa,PaymentMethod.Khalti],
-    default: PaymentMethod.Esewa
+    enum: [PaymentMethod.Esewa, PaymentMethod.Khalti],
+    default: PaymentMethod.Esewa,
   },
 });
 
-
-const Payment =
-  mongoose.model("Payment", paymentSchema);
+const Payment = mongoose.models?.Payment || mongoose.model("Payment", paymentSchema);
 export default Payment;

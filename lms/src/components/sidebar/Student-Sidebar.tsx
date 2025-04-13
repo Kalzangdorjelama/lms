@@ -4,7 +4,7 @@ function StudentSidebar(){
     return(
         <div className="flex flex-col flex-1 overflow-y-auto">
         <nav className="flex-1 px-2 py-4 bg-gray-800">
-          <Link
+          {/* <Link
             href="/admin"
             className="flex items-center px-4 py-2 text-gray-100 hover:bg-gray-700"
           >
@@ -22,7 +22,7 @@ function StudentSidebar(){
               />
             </svg>
             Stats
-          </Link>
+          </Link> */}
          
          
           <Link
@@ -45,7 +45,7 @@ function StudentSidebar(){
             Courses
           </Link>
           <Link
-            href="/admin/enrollments"
+            href="/students/enrollments"
             className="flex items-center px-4 py-2 mt-2 text-gray-100 hover:bg-gray-700"
           >
             <svg
