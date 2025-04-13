@@ -25,7 +25,10 @@ import { editCategory } from "@/store/category/categorySlice";
 
 function Categories() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState<string>("");
+
+  // Google: https://drive.google.com/file/d/19KvODoa8BxTJVFWV3Wtrbg91rmWjLDvD/view
+  const dispatch = useAppDispatch();
   // const [categories, setCategories] = useState([]);
 
   // we are not doing this code in client side so call this from by making wrapper function in useEffect code below
@@ -37,6 +40,7 @@ function Categories() {
   // console.log("isModalOpen: ",isModalOpen);
 
   // above code work but for more optimization better use useCallback hook as if we are passing any function as a props to any component then it will create every time in the re-render so to prevent it hami useCallback hook bitra pass garxau so it it create an instance and EXISTING one is USED hai and every time re-render huda create hudai that is above two function openModal , closeModal
+  const { categories } = useAppSelector((store) => store.categories);
   const openModal = useCallback(() => setIsModalOpen(true), []);
   const closeModal = useCallback(() => setIsModalOpen(false), []);
 
@@ -46,15 +50,13 @@ function Categories() {
   // }
   // openModalRef.current = openModal
 
-  const dispatch = useAppDispatch();
   const deleteCat = (id: string) => {
     if (id) {
       dispatch(deleteCategory(id));
     }
   };
 
-  // Google: https://drive.google.com/file/d/19KvODoa8BxTJVFWV3Wtrbg91rmWjLDvD/view
-  const { categories } = useAppSelector((store) => store.categories);
+  
 
   useEffect(() => {
     dispatch(fetchCategories());
@@ -109,6 +111,7 @@ function Categories() {
               </svg>
             </div>
             <div className="flex justify-between">
+
               <input
                 onChange={(e) => setSearchTerm(e.target.value)}
                 type="text"

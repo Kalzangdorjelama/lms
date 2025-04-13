@@ -1,16 +1,28 @@
 import dbConnect from "@/database/connection";
+import Course from "@/database/models/course.schema";
 import Enrollment from "@/database/models/enrollment.schema";
+import Payment, { PaymentMethod } from "@/database/models/payment.schema";
 
 export async function enrollCourse(req: Request) {
   try {
     await dbConnect();
-    const { whatsapp, course } = await req.json();
+    const { whatsapp, course, paymentMethod } = await req.json();
     const data = await Enrollment.create({  // Input Type ==>	Single document {} ko return type ==> Object {} and for Input Type ==> Multiple documents [{},{},...] ko return type ==> Array of objects [{},{},...]
-
       whatsapp,
       course,
       student: "7",   // session.user.id aauxa here
     });
+    const courseData = await Course.findById(course)
+    if(paymentMethod === PaymentMethod.Esewa){
+
+    }else{
+      await Payment.create({
+        enrollment:data._id,
+        amount: courseData.price,
+        paymentMethod: paymentMethod.Khalti
+      })
+
+    }
     if (!data) {
       return Response.json(
         {

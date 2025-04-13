@@ -29,10 +29,10 @@ const courseSchema = new Schema<ICourse>({
   },
 
 
-  // category: {
-  //   type: Schema.Types.ObjectId,
-  //   ref: "Category",
-  // },
+  category: {
+    type: Schema.Types.ObjectId,
+    ref: "Category",
+  },
 
 
   // lessons: [
